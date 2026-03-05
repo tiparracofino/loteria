@@ -498,6 +498,46 @@ font-size: 0.8rem;
 }
 .season-stat-label { color: #6b6560; font-size: 0.65rem; }
 
+/* ── Season collection details ── */
+.season-collections {
+margin-top: 12px;
+padding-top: 10px;
+border-top: 1px solid #e8e0d0;
+}
+.season-collection-item {
+margin-bottom: 10px;
+}
+.season-collection-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-size: 0.75rem;
+font-weight: 500;
+margin-bottom: 4px;
+}
+.season-collection-date { color: #a09890; font-size: 0.65rem; }
+.season-member-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 3px 0;
+font-size: 0.75rem;
+}
+.season-member-name { color: #6b6560; }
+.season-member-paid { color: #2d6a4f; font-weight: 500; }
+.season-member-pending { color: #c23b22; font-weight: 500; }
+.season-toggle {
+font-size: 0.65rem;
+color: #a09890;
+cursor: pointer;
+text-align: center;
+padding: 6px 0 0;
+border: none;
+background: none;
+width: 100%;
+font-family: inherit;
+}
+
 /* ── History list ── */
 .history-empty {
 text-align: center;
@@ -748,9 +788,13 @@ body.modal-open { overflow: hidden; }
     </div>
   </div>
 
-  <!-- Payment tracking -->
+  <!-- Payment tracking (active collection) -->
 
   <div id="payment-tracker"></div>
+
+  <!-- Season collections history -->
+
+  <div id="collections-history"></div>
 
   <!-- Quick play -->
 
@@ -911,12 +955,16 @@ body.modal-open { overflow: hidden; }
     <div class="modal-title">Recoger dinero · 集金</div>
     <div class="form-group">
       <label class="form-label">Cantidad por persona</label>
-      <input type="number" class="form-input" id="collect-amount" placeholder="0.00" step="0.5" min="0" inputmode="decimal">
+      <input type="number" class="form-input" id="collect-amount" placeholder="0.00" step="0.5" min="0" inputmode="decimal" oninput="updateCollectPreview()">
     </div>
-    <div class="form-group" id="collect-info" style="font-size:0.8rem; color:#6b6560; text-align:center;"></div>
+    <div id="collect-preview" style="text-align:center; margin-bottom:12px;">
+      <div style="font-family:'Shippori Mincho',serif; font-size:1.6rem; font-weight:800;" id="collect-total-preview">0,00€</div>
+      <div style="font-size:0.7rem; color:#a09890;" id="collect-detail-preview">Total para 0 miembros</div>
+    </div>
+    <div class="form-group" id="collect-info" style="font-size:0.8rem; color:#c23b22; text-align:center;"></div>
     <div class="btn-row">
       <button class="btn btn-outline" onclick="closeModal('modal-collect')">Cancelar</button>
-      <button class="btn btn-primary" onclick="startCollection()">Iniciar recogida</button>
+      <button class="btn btn-primary" id="collect-submit-btn" onclick="startCollection()">Iniciar recogida</button>
     </div>
   </div>
 </div>
@@ -1145,8 +1193,11 @@ function renderHome() {
   wonEl.textContent = formatMoney(data.currentSeason.won) + '€';
   wonEl.className = 'fund-stat-value ' + (data.currentSeason.won > 0 ? 'positive' : '');
 
-  // Payment tracker
+  // Payment tracker (active collection)
   renderPaymentTracker();
+
+  // Collections history for current season
+  renderCollectionsHistory();
 
   // Recent plays (last 5)
   const recent = [...data.plays].reverse().slice(0, 5);
@@ -1389,8 +1440,7 @@ function getActiveCollection() {
 function openCollectModal() {
   const active = getActiveCollection();
   if (active) {
-    // If there's an active collection, just go home and show it
-    closeModal('modal-collect');
+    // Show home with active collection tracker
     showScreen('home');
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.querySelectorAll('.nav-item')[0].classList.add('active');
@@ -1398,10 +1448,29 @@ function openCollectModal() {
   }
   document.getElementById('collect-amount').value = '';
   const n = data.members.length;
-  document.getElementById('collect-info').textContent = n > 0
-    ? `${n} miembros en el grupo`
-    : 'No hay miembros. Añade al grupo primero.';
+  const infoEl = document.getElementById('collect-info');
+  const submitBtn = document.getElementById('collect-submit-btn');
+  if (n === 0) {
+    infoEl.textContent = 'Añade miembros al grupo antes de recoger dinero.';
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.4';
+  } else {
+    infoEl.textContent = '';
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = '1';
+  }
+  updateCollectPreview();
   openModal('modal-collect');
+}
+
+function updateCollectPreview() {
+  const amount = parseFloat(document.getElementById('collect-amount').value) || 0;
+  const n = data.members.length;
+  const total = Math.round(amount * n * 100) / 100;
+  document.getElementById('collect-total-preview').textContent = formatMoney(total) + '€';
+  document.getElementById('collect-detail-preview').textContent = n > 0
+    ? formatMoney(amount) + '€ × ' + n + ' miembros'
+    : 'No hay miembros en el grupo';
 }
 
 function startCollection() {
@@ -1465,13 +1534,13 @@ function renderPaymentTracker() {
       <div class="payment-progress">
         <div class="payment-progress-bar" style="width:${pct}%"></div>
       </div>
-      ${members.map(name => `
+      ${members.map((name, i) => `
         <div class="payment-member-row">
           <div class="payment-member-info">
             <div class="member-avatar" style="width:30px;height:30px;font-size:0.75rem;">${name.charAt(0).toUpperCase()}</div>
             <div class="payment-member-name">${escapeHtml(name)}</div>
           </div>
-          <button class="payment-check ${active.payments[name] ? 'paid' : ''}" onclick="togglePayment('${escapeHtml(name).replace(/'/g, "\\'")}')">
+          <button class="payment-check ${active.payments[name] ? 'paid' : ''}" data-payment-index="${i}">
             ${active.payments[name] ? '✓' : ''}
           </button>
         </div>
@@ -1479,6 +1548,51 @@ function renderPaymentTracker() {
       <div class="payment-counter">${paidCount} de ${totalCount} han pagado${allPaid ? ' · ¡Todos al día!' : ''}</div>
       ${allPaid ? `<button class="btn btn-outline btn-sm payment-close-btn" onclick="closeCollection()" style="width:100%;margin-top:10px;">Cerrar recogida</button>` : ''}
     </div>
+  `;
+
+  // Attach click handlers safely (avoids quote escaping issues in names)
+  container.querySelectorAll('[data-payment-index]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-payment-index'));
+      const memberName = members[idx];
+      if (memberName) togglePayment(memberName);
+    });
+  });
+}
+
+function renderCollectionsHistory() {
+  const container = document.getElementById('collections-history');
+  const seasonStart = new Date(data.currentSeason.startDate).getTime();
+  // Get closed collections for this season
+  const closedCollections = data.collections.filter(c =>
+    c.closed && new Date(c.date).getTime() >= seasonStart
+  ).reverse();
+
+  if (closedCollections.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="section-title"><span class="dot"></span>Recogidas · 集金履歴</div>
+    ${closedCollections.map(c => {
+      const members = Object.keys(c.payments);
+      const paidCount = members.filter(m => c.payments[m]).length;
+      const totalCount = members.length;
+      return `
+      <div class="card" style="margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-family:'Shippori Mincho',serif; font-weight:600; font-size:0.9rem;">${formatMoney(c.amount)}€ / persona</span>
+          <span style="font-size:0.65rem; color:#a09890;">${formatDateShort(c.date)} · ${paidCount}/${totalCount}</span>
+        </div>
+        ${members.map(name => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; font-size:0.8rem;">
+            <span style="color:#6b6560;">${escapeHtml(name)}</span>
+            <span style="font-weight:500; color:${c.payments[name] ? '#2d6a4f' : '#c23b22'};">${c.payments[name] ? '✓ Pagado' : '✕ Pendiente'}</span>
+          </div>
+        `).join('')}
+      </div>
+    `}).join('')}
   `;
 }
 
@@ -1614,15 +1728,24 @@ function openNewSeasonModal() {
 function startNewSeason() {
   const name = document.getElementById('season-name').value.trim() || ('Temporada ' + (data.seasons.length + 2));
 
-  // Archive current season
+  // Close any active collection
+  const active = getActiveCollection();
+  if (active) active.closed = true;
+
+  // Get collections that belong to this season
+  const seasonStart = new Date(data.currentSeason.startDate).getTime();
+  const seasonCollections = data.collections.filter(c => new Date(c.date).getTime() >= seasonStart);
+
+  // Archive current season with its collections
   data.seasons.push({
     ...data.currentSeason,
     endDate: new Date().toISOString(),
     plays: data.plays.length,
-    balance: Math.round((data.currentSeason.won - data.currentSeason.spent) * 100) / 100
+    balance: Math.round((data.currentSeason.won - data.currentSeason.spent) * 100) / 100,
+    collections: JSON.parse(JSON.stringify(seasonCollections))
   });
 
-  // Reset season counters but keep the fund (including remaining winnings)
+  // Reset season counters but keep the fund
   data.currentSeason = {
     name,
     startDate: new Date().toISOString(),
@@ -1632,9 +1755,6 @@ function startNewSeason() {
   };
   data.plays = [];
   data.wins = [];
-  // Close any active collection
-  const active = getActiveCollection();
-  if (active) active.closed = true;
 
   saveData();
   closeModal('modal-season');
@@ -1701,7 +1821,11 @@ function renderHistory() {
   // Seasons
   const seasonsContainer = document.getElementById('history-seasons');
   const allSeasons = [...data.seasons].reverse();
-  // Add current season at top
+
+  // Current season collections
+  const seasonStart = new Date(data.currentSeason.startDate).getTime();
+  const currentCollections = data.collections.filter(c => new Date(c.date).getTime() >= seasonStart);
+
   const currentHtml = `
     <div class="season-card" style="border-left: 3px solid #c23b22;">
       <div class="season-header">
@@ -1713,9 +1837,11 @@ function renderHistory() {
         <div><div class="season-stat-label">Jugado</div>${formatMoney(data.currentSeason.spent)}€</div>
         <div><div class="season-stat-label">Ganado</div>${formatMoney(data.currentSeason.won)}€</div>
       </div>
+      ${renderSeasonCollections(currentCollections, 'current')}
     </div>
   `;
-  const pastHtml = allSeasons.map(s => `
+
+  const pastHtml = allSeasons.map((s, i) => `
     <div class="season-card">
       <div class="season-header">
         <div class="season-name">${escapeHtml(s.name)}</div>
@@ -1726,9 +1852,53 @@ function renderHistory() {
         <div><div class="season-stat-label">Jugado</div>${formatMoney(s.spent)}€</div>
         <div><div class="season-stat-label">Balance</div><span class="${s.balance >= 0 ? 'positive' : 'negative'}">${s.balance >= 0 ? '+' : ''}${formatMoney(s.balance)}€</span></div>
       </div>
+      ${s.collections ? renderSeasonCollections(s.collections, 'past-' + i) : ''}
     </div>
   `).join('');
   seasonsContainer.innerHTML = currentHtml + (allSeasons.length > 0 ? pastHtml : '<div style="text-align:center;font-size:0.75rem;color:#a09890;padding:12px;">Sin temporadas archivadas</div>');
+
+  // Attach toggle handlers
+  seasonsContainer.querySelectorAll('.season-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.getAttribute('data-target'));
+      if (target) {
+        const isHidden = target.style.display === 'none';
+        target.style.display = isHidden ? 'block' : 'none';
+        btn.textContent = isHidden ? '▲ Ocultar recogidas' : '▼ Ver recogidas (' + btn.getAttribute('data-count') + ')';
+      }
+    });
+  });
+}
+
+function renderSeasonCollections(collections, prefix) {
+  if (!collections || collections.length === 0) return '';
+
+  const detailsHtml = collections.map((c, j) => {
+    const members = Object.keys(c.payments);
+    const paidCount = members.filter(m => c.payments[m]).length;
+    const totalCount = members.length;
+    return `
+      <div class="season-collection-item">
+        <div class="season-collection-header">
+          <span>${formatMoney(c.amount)}€ / persona</span>
+          <span class="season-collection-date">${formatDateShort(c.date)} · ${paidCount}/${totalCount} pagados</span>
+        </div>
+        ${members.map(name => `
+          <div class="season-member-row">
+            <span class="season-member-name">${escapeHtml(name)}</span>
+            <span class="${c.payments[name] ? 'season-member-paid' : 'season-member-pending'}">${c.payments[name] ? '✓ Pagado' : '✕ Pendiente'}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <button class="season-toggle" data-target="sc-${prefix}" data-count="${collections.length}">▼ Ver recogidas (${collections.length})</button>
+    <div class="season-collections" id="sc-${prefix}" style="display:none;">
+      ${detailsHtml}
+    </div>
+  `;
 }
 
 // ═══════════════════════════════════
