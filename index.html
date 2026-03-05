@@ -11,27 +11,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --sumi: #1a1a1a;
-  --sumi-light: #2d2d2d;
-  --washi: #f5f0e8;
-  --washi-dark: #e8e0d0;
-  --vermillion: #c23b22;
-  --vermillion-dark: #9e2f1b;
-  --gold: #b8860b;
-  --gold-light: #d4a843;
-  --ink-light: #6b6560;
-  --ink-faint: #a09890;
-  --positive: #2d6a4f;
-  --negative: #c23b22;
-  --shadow: rgba(26,26,26,0.08);
-  --radius: 12px;
-}
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html, body {
   font-family: 'Noto Sans JP', sans-serif;
-  background: var(--washi);
-  color: var(--sumi);
+  background: #f5f0e8;
+  color: #1a1a1a;
   min-height: 100vh;
   min-height: 100dvh;
   min-height: -webkit-fill-available;
@@ -53,8 +37,8 @@ position: -webkit-sticky;
 position: sticky;
 top: 0;
 z-index: 100;
-background: var(–washi);
-border-bottom: 1px solid var(–washi-dark);
+background: #f5f0e8;
+border-bottom: 1px solid #e8e0d0;
 padding: 12px 20px;
 display: flex;
 align-items: center;
@@ -67,12 +51,12 @@ font-weight: 800;
 letter-spacing: 0.05em;
 }
 .header-title .kanji {
-color: var(–vermillion);
+color: #c23b22;
 font-size: 1.8rem;
 }
 .header-sub {
 font-size: 0.7rem;
-color: var(–ink-light);
+color: #6b6560;
 letter-spacing: 0.15em;
 text-transform: uppercase;
 }
@@ -80,12 +64,12 @@ text-transform: uppercase;
 /* ── Hanko seal ── */
 .hanko {
 width: 38px; height: 38px;
-border: 2px solid var(–vermillion);
+border: 2px solid #c23b22;
 border-radius: 4px;
 display: flex; align-items: center; justify-content: center;
 font-family: ‘Shippori Mincho’, serif;
 font-size: 1rem;
-color: var(–vermillion);
+color: #c23b22;
 font-weight: 800;
 transform: rotate(-3deg);
 flex-shrink: 0;
@@ -99,8 +83,8 @@ transition: transform 0.2s;
 position: fixed;
 bottom: 0; left: 0; right: 0;
 z-index: 100;
-background: var(–washi);
-border-top: 1px solid var(–washi-dark);
+background: #f5f0e8;
+border-top: 1px solid #e8e0d0;
 display: flex;
 padding-bottom: 20px;
 padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
@@ -112,7 +96,7 @@ flex-direction: column;
 align-items: center;
 padding: 10px 4px 6px;
 cursor: pointer;
-color: var(–ink-faint);
+color: #a09890;
 font-size: 0.65rem;
 letter-spacing: 0.08em;
 transition: color 0.2s;
@@ -120,7 +104,7 @@ border: none;
 background: none;
 font-family: inherit;
 }
-.nav-item.active { color: var(–vermillion); }
+.nav-item.active { color: #c23b22; }
 .nav-item .nav-kanji {
 font-family: ‘Shippori Mincho’, serif;
 font-size: 1.3rem;
@@ -135,9 +119,9 @@ line-height: 1.2;
 
 /* ── Fund Summary Card ── */
 .fund-card {
-background: var(–sumi);
-color: var(–washi);
-border-radius: var(–radius);
+background: #1a1a1a;
+color: #f5f0e8;
+border-radius: 12px;
 padding: 24px;
 margin-bottom: 20px;
 position: relative;
@@ -202,7 +186,7 @@ gap: 8px;
 }
 .section-title .dot {
 width: 6px; height: 6px;
-background: var(–vermillion);
+background: #c23b22;
 border-radius: 50%;
 flex-shrink: 0;
 }
@@ -210,10 +194,10 @@ flex-shrink: 0;
 /* ── Cards & Lists ── */
 .card {
 background: white;
-border-radius: var(–radius);
+border-radius: 12px;
 padding: 16px;
 margin-bottom: 10px;
-box-shadow: 0 1px 3px var(–shadow);
+box-shadow: 0 1px 3px rgba(26,26,26,0.08);
 transition: transform 0.15s;
 }
 .card:active { transform: scale(0.985); }
@@ -226,13 +210,13 @@ justify-content: space-between;
 .member-info { display: flex; align-items: center; gap: 12px; flex:1; min-width:0; }
 .member-avatar {
 width: 36px; height: 36px;
-background: var(–washi-dark);
+background: #e8e0d0;
 border-radius: 50%;
 display: flex; align-items: center; justify-content: center;
 font-family: ‘Shippori Mincho’, serif;
 font-size: 0.85rem;
 font-weight: 600;
-color: var(–ink-light);
+color: #6b6560;
 flex-shrink: 0;
 }
 .member-name {
@@ -244,13 +228,13 @@ text-overflow: ellipsis;
 }
 .member-since {
 font-size: 0.65rem;
-color: var(–ink-faint);
+color: #a09890;
 }
 .member-remove {
 width: 32px; height: 32px;
 border: none;
 background: none;
-color: var(–ink-faint);
+color: #a09890;
 font-size: 1.2rem;
 cursor: pointer;
 border-radius: 50%;
@@ -258,7 +242,7 @@ display: flex; align-items: center; justify-content: center;
 transition: all 0.15s;
 flex-shrink: 0;
 }
-.member-remove:hover { background: #fee; color: var(–vermillion); }
+.member-remove:hover { background: #fee; color: #c23b22; }
 
 /* ── Play entry ── */
 .play-entry {
@@ -282,17 +266,17 @@ letter-spacing: 0.05em;
 }
 .badge-euro { background: #e8f0fe; color: #1a56db; }
 .badge-primi { background: #fef3e8; color: #b45309; }
-.play-date { font-size: 0.65rem; color: var(–ink-faint); margin-top: 2px; }
+.play-date { font-size: 0.65rem; color: #a09890; margin-top: 2px; }
 .play-amount {
 font-family: ‘Shippori Mincho’, serif;
 font-weight: 600;
 font-size: 1rem;
-color: var(–vermillion);
+color: #c23b22;
 flex-shrink: 0;
 }
 
 /* ── Win entry ── */
-.win-amount { color: var(–positive); }
+.win-amount { color: #2d6a4f; }
 
 /* ── Buttons ── */
 .btn {
@@ -303,7 +287,7 @@ gap: 8px;
 width: 100%;
 padding: 14px;
 border: none;
-border-radius: var(–radius);
+border-radius: 12px;
 font-family: ‘Noto Sans JP’, sans-serif;
 font-size: 0.85rem;
 font-weight: 500;
@@ -313,22 +297,22 @@ letter-spacing: 0.05em;
 }
 .btn:active { transform: scale(0.97); }
 .btn-primary {
-background: var(–sumi);
-color: var(–washi);
+background: #1a1a1a;
+color: #f5f0e8;
 }
 .btn-vermillion {
-background: var(–vermillion);
+background: #c23b22;
 color: white;
 }
 .btn-outline {
 background: none;
-border: 1.5px solid var(–washi-dark);
-color: var(–sumi);
+border: 1.5px solid #e8e0d0;
+color: #1a1a1a;
 }
 .btn-danger {
 background: none;
-border: 1.5px solid var(–vermillion);
-color: var(–vermillion);
+border: 1.5px solid #c23b22;
+color: #c23b22;
 }
 .btn-sm {
 padding: 10px 16px;
@@ -347,8 +331,8 @@ margin-bottom: 20px;
 .quick-play-btn {
 flex: 1;
 background: white;
-border: 2px solid var(–washi-dark);
-border-radius: var(–radius);
+border: 2px solid #e8e0d0;
+border-radius: 12px;
 padding: 16px 12px;
 cursor: pointer;
 text-align: center;
@@ -369,7 +353,7 @@ margin-bottom: 2px;
 }
 .quick-play-btn .qp-price {
 font-size: 0.7rem;
-color: var(–ink-faint);
+color: #a09890;
 }
 .qp-euro { color: #1a56db; }
 .qp-primi { color: #b45309; }
@@ -394,7 +378,7 @@ opacity: 1;
 pointer-events: auto;
 }
 .modal {
-background: var(–washi);
+background: #f5f0e8;
 border-radius: 16px 16px 0 0;
 width: 100%;
 max-width: 500px;
@@ -412,7 +396,7 @@ transform: translateY(0);
 }
 .modal-handle {
 width: 36px; height: 4px;
-background: var(–washi-dark);
+background: #e8e0d0;
 border-radius: 2px;
 margin: 0 auto 16px;
 }
@@ -430,27 +414,27 @@ text-align: center;
 display: block;
 font-size: 0.7rem;
 letter-spacing: 0.12em;
-color: var(–ink-light);
+color: #6b6560;
 text-transform: uppercase;
 margin-bottom: 6px;
 }
 .form-input {
 width: 100%;
 padding: 12px 14px;
-border: 1.5px solid var(–washi-dark);
+border: 1.5px solid #e8e0d0;
 border-radius: 8px;
 font-family: inherit;
 font-size: 1rem;
 background: white;
-color: var(–sumi);
+color: #1a1a1a;
 transition: border-color 0.2s;
 -webkit-appearance: none;
 }
 .form-input:focus {
 outline: none;
-border-color: var(–sumi);
+border-color: #1a1a1a;
 }
-.form-input::placeholder { color: var(–ink-faint); }
+.form-input::placeholder { color: #a09890; }
 select.form-input {
 cursor: pointer;
 }
@@ -466,13 +450,13 @@ margin: 12px 0;
 .col-btn {
 width: 44px; height: 44px;
 border-radius: 50%;
-border: 1.5px solid var(–washi-dark);
+border: 1.5px solid #e8e0d0;
 background: white;
 font-size: 1.2rem;
 cursor: pointer;
 display: flex; align-items: center; justify-content: center;
 font-family: inherit;
-color: var(–sumi);
+color: #1a1a1a;
 transition: all 0.15s;
 }
 .col-btn:active { transform: scale(0.9); }
@@ -487,10 +471,10 @@ text-align: center;
 /* ── Season card ── */
 .season-card {
 background: white;
-border-radius: var(–radius);
+border-radius: 12px;
 padding: 16px;
 margin-bottom: 10px;
-box-shadow: 0 1px 3px var(–shadow);
+box-shadow: 0 1px 3px rgba(26,26,26,0.08);
 }
 .season-header {
 display: flex;
@@ -505,20 +489,20 @@ font-size: 1rem;
 }
 .season-dates {
 font-size: 0.65rem;
-color: var(–ink-faint);
+color: #a09890;
 }
 .season-stats {
 display: flex;
 gap: 16px;
 font-size: 0.8rem;
 }
-.season-stat-label { color: var(–ink-light); font-size: 0.65rem; }
+.season-stat-label { color: #6b6560; font-size: 0.65rem; }
 
 /* ── History list ── */
 .history-empty {
 text-align: center;
 padding: 40px 20px;
-color: var(–ink-faint);
+color: #a09890;
 }
 .history-empty .empty-kanji {
 font-family: ‘Shippori Mincho’, serif;
@@ -536,22 +520,22 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 padding: 12px 0;
-border-bottom: 1px solid var(–washi-dark);
+border-bottom: 1px solid #e8e0d0;
 }
 .toggle-label { font-size: 0.85rem; }
-.toggle-sub { font-size: 0.65rem; color: var(–ink-faint); margin-top: 2px; }
+.toggle-sub { font-size: 0.65rem; color: #a09890; margin-top: 2px; }
 
 /* ── Divider ── */
 .divider {
 height: 1px;
-background: var(–washi-dark);
+background: #e8e0d0;
 margin: 16px 0;
 }
 
 /* ── Settings info ── */
 .settings-info {
 font-size: 0.7rem;
-color: var(–ink-faint);
+color: #a09890;
 text-align: center;
 padding: 20px;
 line-height: 1.6;
@@ -565,8 +549,8 @@ padding: 20px;
 }
 .enso {
 width: 60px; height: 60px;
-border: 3px solid var(–washi-dark);
-border-top-color: var(–vermillion);
+border: 3px solid #e8e0d0;
+border-top-color: #c23b22;
 border-radius: 50%;
 animation: spin 1.2s linear infinite;
 }
@@ -587,7 +571,7 @@ padding: 8px 0;
 display: flex;
 gap: 4px;
 margin-bottom: 16px;
-background: var(–washi-dark);
+background: #e8e0d0;
 border-radius: 8px;
 padding: 3px;
 }
@@ -601,24 +585,24 @@ border: none;
 background: none;
 border-radius: 6px;
 cursor: pointer;
-color: var(–ink-light);
+color: #6b6560;
 font-family: inherit;
 transition: all 0.2s;
 }
 .tab-item.active {
 background: white;
-color: var(–sumi);
-box-shadow: 0 1px 3px var(–shadow);
+color: #1a1a1a;
+box-shadow: 0 1px 3px rgba(26,26,26,0.08);
 }
 
 /* ── Payment tracking ── */
 .payment-banner {
 background: white;
-border-radius: var(–radius);
+border-radius: 12px;
 padding: 16px;
 margin-bottom: 20px;
-box-shadow: 0 1px 3px var(–shadow);
-border-left: 3px solid var(–vermillion);
+box-shadow: 0 1px 3px rgba(26,26,26,0.08);
+border-left: 3px solid #c23b22;
 }
 .payment-banner-header {
 display: flex;
@@ -635,18 +619,18 @@ font-size: 0.9rem;
 font-family: ‘Shippori Mincho’, serif;
 font-weight: 800;
 font-size: 0.9rem;
-color: var(–vermillion);
+color: #c23b22;
 }
 .payment-progress {
 height: 4px;
-background: var(–washi-dark);
+background: #e8e0d0;
 border-radius: 2px;
 margin-bottom: 10px;
 overflow: hidden;
 }
 .payment-progress-bar {
 height: 100%;
-background: var(–positive);
+background: #2d6a4f;
 border-radius: 2px;
 transition: width 0.3s ease;
 }
@@ -655,7 +639,7 @@ display: flex;
 align-items: center;
 justify-content: space-between;
 padding: 8px 0;
-border-bottom: 1px solid var(–washi-dark);
+border-bottom: 1px solid #e8e0d0;
 }
 .payment-member-row:last-child { border-bottom: none; }
 .payment-member-info {
@@ -674,7 +658,7 @@ text-overflow: ellipsis;
 .payment-check {
 width: 28px; height: 28px;
 border-radius: 50%;
-border: 2px solid var(–washi-dark);
+border: 2px solid #e8e0d0;
 background: white;
 cursor: pointer;
 display: flex;
@@ -688,13 +672,13 @@ flex-shrink: 0;
 font-family: inherit;
 }
 .payment-check.paid {
-border-color: var(–positive);
-background: var(–positive);
+border-color: #2d6a4f;
+background: #2d6a4f;
 color: white;
 }
 .payment-counter {
 font-size: 0.7rem;
-color: var(–ink-faint);
+color: #a09890;
 text-align: center;
 margin-top: 6px;
 }
@@ -714,8 +698,8 @@ width: 7px; height: 7px;
 border-radius: 50%;
 flex-shrink: 0;
 }
-.status-dot.paid { background: var(–positive); }
-.status-dot.pending { background: var(–vermillion); }
+.status-dot.paid { background: #2d6a4f; }
+.status-dot.pending { background: #c23b22; }
 
 /* ── Play type selected ── */
 .quick-play-btn.selected-euro { border-color: #1a56db; background: #e8f0fe; }
@@ -723,7 +707,7 @@ flex-shrink: 0;
 
 /* ── Editable card hint ── */
 .card.editable { cursor: pointer; }
-.card.editable:active { transform: scale(0.97); background: var(–washi); }
+.card.editable:active { transform: scale(0.97); background: #f5f0e8; }
 
 /* ── No-scroll body when modal open ── */
 body.modal-open { overflow: hidden; }
@@ -929,7 +913,7 @@ body.modal-open { overflow: hidden; }
       <label class="form-label">Cantidad por persona</label>
       <input type="number" class="form-input" id="collect-amount" placeholder="0.00" step="0.5" min="0" inputmode="decimal">
     </div>
-    <div class="form-group" id="collect-info" style="font-size:0.8rem; color:var(--ink-light); text-align:center;"></div>
+    <div class="form-group" id="collect-info" style="font-size:0.8rem; color:#6b6560; text-align:center;"></div>
     <div class="btn-row">
       <button class="btn btn-outline" onclick="closeModal('modal-collect')">Cancelar</button>
       <button class="btn btn-primary" onclick="startCollection()">Iniciar recogida</button>
@@ -1022,7 +1006,7 @@ body.modal-open { overflow: hidden; }
       <label class="form-label">Nombre del archivo</label>
       <input type="text" class="form-input" id="export-filename" placeholder="takarakuji_backup">
     </div>
-    <div style="font-size:0.7rem; color:var(--ink-faint); text-align:center; margin-bottom:12px;">.json se añade automáticamente</div>
+    <div style="font-size:0.7rem; color:#a09890; text-align:center; margin-bottom:12px;">.json se añade automáticamente</div>
     <div class="btn-row">
       <button class="btn btn-outline" onclick="closeModal('modal-export')">Cancelar</button>
       <button class="btn btn-primary" onclick="doExport()">Exportar</button>
@@ -1719,9 +1703,9 @@ function renderHistory() {
   const allSeasons = [...data.seasons].reverse();
   // Add current season at top
   const currentHtml = `
-    <div class="season-card" style="border-left: 3px solid var(--vermillion);">
+    <div class="season-card" style="border-left: 3px solid #c23b22;">
       <div class="season-header">
-        <div class="season-name">${escapeHtml(data.currentSeason.name)} <span style="font-size:0.65rem; color:var(--vermillion);">ACTIVA</span></div>
+        <div class="season-name">${escapeHtml(data.currentSeason.name)} <span style="font-size:0.65rem; color:#c23b22;">ACTIVA</span></div>
         <div class="season-dates">Desde ${formatDateShort(data.currentSeason.startDate)}</div>
       </div>
       <div class="season-stats">
@@ -1744,7 +1728,7 @@ function renderHistory() {
       </div>
     </div>
   `).join('');
-  seasonsContainer.innerHTML = currentHtml + (allSeasons.length > 0 ? pastHtml : '<div style="text-align:center;font-size:0.75rem;color:var(--ink-faint);padding:12px;">Sin temporadas archivadas</div>');
+  seasonsContainer.innerHTML = currentHtml + (allSeasons.length > 0 ? pastHtml : '<div style="text-align:center;font-size:0.75rem;color:#a09890;padding:12px;">Sin temporadas archivadas</div>');
 }
 
 // ═══════════════════════════════════
