@@ -25,8 +25,7 @@ html, body {
 }
 html { height: -webkit-fill-available; }
 body {
-  padding-top: 12px;
-  padding-top: max(12px, env(safe-area-inset-top, 12px));
+  padding-top: 0;
   padding-bottom: 90px;
   padding-bottom: calc(max(20px, env(safe-area-inset-bottom, 20px)) + 70px);
 }
@@ -40,6 +39,8 @@ z-index: 100;
 background: #f5f0e8;
 border-bottom: 1px solid #e8e0d0;
 padding: 12px 20px;
+padding-top: 59px;
+padding-top: calc(env(safe-area-inset-top, 59px) + 8px);
 display: flex;
 align-items: center;
 justify-content: space-between;
